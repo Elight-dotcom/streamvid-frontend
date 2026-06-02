@@ -43,7 +43,9 @@ export default function AddMoviePage() {
     try {
       const response = await fetch(
         `${TMDB_BASE}/search/movie?query=${encodeURIComponent(query)}&language=id-ID&page=1`,
-        { headers: { accept: "application/json", Authorization: TMDB_API_KEY } }
+        {
+          headers: { accept: "application/json", Authorization: TMDB_API_KEY },
+        },
       );
       if (!response.ok) throw new Error("TMDB Error");
       const data = await response.json();
@@ -76,6 +78,7 @@ export default function AddMoviePage() {
     if (!selectedMovie) return;
 
     try {
+      setError(null);
       setLoading(true);
       const payload: AddMovieData = {
         tmdbId: selectedMovie.id,
@@ -88,7 +91,10 @@ export default function AddMoviePage() {
       setMagnetLink("");
       setSelectedMovie(null);
     } catch (error) {
-      setError("Gagal menyimpan ke database." + (error instanceof Error ? error.message : ""));
+      setError(
+        "Gagal menyimpan ke database." +
+          (error instanceof Error ? error.message : ""),
+      );
       console.error("Submit error:", error);
     } finally {
       setLoading(false);
@@ -98,23 +104,48 @@ export default function AddMoviePage() {
   return (
     <div className="nv" ref={rootRef}>
       <div style={{ padding: "60px", maxWidth: "1200px", margin: "0 auto" }}>
-        
         {/* Breadcrumb Header */}
         <header style={{ marginBottom: 40 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, opacity: 0.8, marginBottom: 8 }}>
-             <span style={{ fontSize: 13, letterSpacing: 1.5, color: "var(--ac)" }}>DATABASE MANAGEMENT</span>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              opacity: 0.8,
+              marginBottom: 8,
+            }}
+          >
+            <span
+              style={{ fontSize: 13, letterSpacing: 1.5, color: "var(--ac)" }}
+            >
+              DATABASE MANAGEMENT
+            </span>
           </div>
-          <h1 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: 48, letterSpacing: 2, margin: 0 }}>
+          <h1
+            style={{
+              fontFamily: '"Bebas Neue", sans-serif',
+              fontSize: 48,
+              letterSpacing: 2,
+              margin: 0,
+            }}
+          >
             ADD NEW <span style={{ color: "var(--ac)" }}>ENTRY</span>
           </h1>
         </header>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 400px", gap: 40 }}>
-          
+        <div
+          style={{ display: "grid", gridTemplateColumns: "1fr 400px", gap: 40 }}
+        >
           {/* Left Side: Form */}
           <form onSubmit={handleSubmit}>
-            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 24, padding: 40 }}>
-              
+            <div
+              style={{
+                background: "rgba(255,255,255,0.03)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: 24,
+                padding: 40,
+              }}
+            >
               {/* Search Input */}
               <div style={{ marginBottom: 32, position: "relative" }}>
                 <label style={labelStyle}>Cari di TMDB</label>
@@ -127,26 +158,50 @@ export default function AddMoviePage() {
                   onFocus={() => titleQuery.length > 1 && setShowDropdown(true)}
                   onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
                   style={{ width: "100%", fontSize: 18, padding: "16px 20px" }}
-                  data-row={1} data-col={1}
+                  data-row={1}
+                  data-col={1}
                 />
 
                 {/* Dropdown Results */}
                 {showDropdown && (
                   <div style={dropdownContainerStyle}>
                     {searching ? (
-                      <div style={{ padding: 20, textAlign: "center", color: "var(--mt)" }}>Mencari film...</div>
+                      <div
+                        style={{
+                          padding: 20,
+                          textAlign: "center",
+                          color: "var(--mt)",
+                        }}
+                      >
+                        Mencari film...
+                      </div>
                     ) : results.length > 0 ? (
                       results.slice(0, 6).map((m) => (
-                        <div key={m.id} onMouseDown={() => handleSelect(m)} style={dropdownItemStyle} className="dropdown-item">
-                          <img src={m.poster_path ? TMDB_IMG + m.poster_path : ""} style={miniPosterStyle} alt="" />
+                        <div
+                          key={m.id}
+                          onMouseDown={() => handleSelect(m)}
+                          style={dropdownItemStyle}
+                          className="dropdown-item"
+                        >
+                          <img
+                            src={m.poster_path ? TMDB_IMG + m.poster_path : ""}
+                            style={miniPosterStyle}
+                            alt=""
+                          />
                           <div>
-                            <div style={{ fontWeight: 600, fontSize: 15 }}>{m.title}</div>
-                            <div style={{ fontSize: 12, opacity: 0.5 }}>{m.release_date?.split("-")[0]}</div>
+                            <div style={{ fontWeight: 600, fontSize: 15 }}>
+                              {m.title}
+                            </div>
+                            <div style={{ fontSize: 12, opacity: 0.5 }}>
+                              {m.release_date?.split("-")[0]}
+                            </div>
                           </div>
                         </div>
                       ))
                     ) : (
-                      <div style={{ padding: 20, textAlign: "center" }}>Tidak ditemukan.</div>
+                      <div style={{ padding: 20, textAlign: "center" }}>
+                        Tidak ditemukan.
+                      </div>
                     )}
                   </div>
                 )}
@@ -162,19 +217,47 @@ export default function AddMoviePage() {
                   value={magnetLink}
                   onChange={(e) => setMagnetLink(e.target.value)}
                   style={{ width: "100%", fontSize: 18, padding: "16px 20px" }}
-                  data-row={2} data-col={1}
+                  data-row={2}
+                  data-col={1}
                 />
               </div>
 
               {/* Submit Buttons */}
               <div style={{ display: "flex", gap: 16 }}>
-                <button type="button" onClick={() => window.history.back()} className="nv-nb" style={{ flex: 1 }} data-row={3} data-col={1}>
+                <button
+                  type="button"
+                  onClick={() => window.history.back()}
+                  className="nv-nb"
+                  style={{ flex: 1 }}
+                  data-row={3}
+                  data-col={1}
+                >
                   Batal
                 </button>
-                <button type="submit" disabled={!selectedMovie || loading} className="nv-play" style={{ flex: 2 }} data-row={3} data-col={2}>
+                <button
+                  type="submit"
+                  disabled={!selectedMovie || loading}
+                  className="nv-play"
+                  style={{ flex: 2 }}
+                  data-row={3}
+                  data-col={2}
+                >
                   {loading ? "Menyimpan..." : "Tambahkan Film"}
                 </button>
               </div>
+
+              {error && (
+                <div
+                  style={{
+                    marginTop: 16,
+                    color: "#ff6b6b",
+                    fontSize: 14,
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {error}
+                </div>
+              )}
             </div>
           </form>
 
@@ -184,13 +267,29 @@ export default function AddMoviePage() {
               <label style={labelStyle}>Preview</label>
               {selectedMovie ? (
                 <div style={previewCardStyle}>
-                  <img 
-                    src={selectedMovie.poster_path ? `https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}` : ""} 
-                    style={largePosterStyle} 
+                  <img
+                    src={
+                      selectedMovie.poster_path
+                        ? `https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`
+                        : ""
+                    }
+                    style={largePosterStyle}
                   />
                   <div style={{ padding: 20 }}>
-                    <h3 style={{ margin: "0 0 8px 0" }}>{selectedMovie.title}</h3>
-                    <p style={{ fontSize: 13, color: "var(--mt)", lineHeight: 1.6, display: "-webkit-box", WebkitLineClamp: 4, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                    <h3 style={{ margin: "0 0 8px 0" }}>
+                      {selectedMovie.title}
+                    </h3>
+                    <p
+                      style={{
+                        fontSize: 13,
+                        color: "var(--mt)",
+                        lineHeight: 1.6,
+                        display: "-webkit-box",
+                        WebkitLineClamp: 4,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                      }}
+                    >
                       {selectedMovie.overview}
                     </p>
                   </div>
@@ -202,7 +301,6 @@ export default function AddMoviePage() {
               )}
             </div>
           </aside>
-
         </div>
       </div>
     </div>
@@ -211,34 +309,66 @@ export default function AddMoviePage() {
 
 // Styles
 const labelStyle: React.CSSProperties = {
-  display: "block", fontSize: 11, fontWeight: 700, letterSpacing: 2,
-  textTransform: "uppercase", color: "var(--ac)", marginBottom: 12, opacity: 0.7
+  display: "block",
+  fontSize: 11,
+  fontWeight: 700,
+  letterSpacing: 2,
+  textTransform: "uppercase",
+  color: "var(--ac)",
+  marginBottom: 12,
+  opacity: 0.7,
 };
 
 const dropdownContainerStyle: React.CSSProperties = {
-  position: "absolute", top: "105%", left: 0, right: 0,
-  background: "#161621", border: "1px solid #2a2a3a",
-  borderRadius: 16, overflow: "hidden", zIndex: 100, boxShadow: "0 20px 40px rgba(0,0,0,0.4)"
+  position: "absolute",
+  top: "105%",
+  left: 0,
+  right: 0,
+  background: "#161621",
+  border: "1px solid #2a2a3a",
+  borderRadius: 16,
+  overflow: "hidden",
+  zIndex: 100,
+  boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
 };
 
 const dropdownItemStyle: React.CSSProperties = {
-  display: "flex", alignItems: "center", gap: 15, padding: "12px 16px",
-  cursor: "pointer", borderBottom: "1px solid rgba(255,255,255,0.05)"
+  display: "flex",
+  alignItems: "center",
+  gap: 15,
+  padding: "12px 16px",
+  cursor: "pointer",
+  borderBottom: "1px solid rgba(255,255,255,0.05)",
 };
 
 const miniPosterStyle: React.CSSProperties = {
-  width: 40, height: 60, borderRadius: 4, objectFit: "cover", background: "#000"
+  width: 40,
+  height: 60,
+  borderRadius: 4,
+  objectFit: "cover",
+  background: "#000",
 };
 
 const previewCardStyle: React.CSSProperties = {
-  background: "var(--sf)", borderRadius: 24, overflow: "hidden", border: "1px solid rgba(255,255,255,0.05)"
+  background: "var(--sf)",
+  borderRadius: 24,
+  overflow: "hidden",
+  border: "1px solid rgba(255,255,255,0.05)",
 };
 
 const largePosterStyle: React.CSSProperties = {
-  width: "100%", height: "350px", objectFit: "cover"
+  width: "100%",
+  height: "350px",
+  objectFit: "cover",
 };
 
 const emptyPreviewStyle: React.CSSProperties = {
-  height: 400, border: "2px dashed rgba(255,255,255,0.05)", borderRadius: 24,
-  display: "flex", alignItems: "center", justifyContent: "center", color: "var(--mt)", fontSize: 14
+  height: 400,
+  border: "2px dashed rgba(255,255,255,0.05)",
+  borderRadius: 24,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: "var(--mt)",
+  fontSize: 14,
 };

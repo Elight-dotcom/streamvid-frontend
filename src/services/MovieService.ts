@@ -20,6 +20,7 @@ const options = {
     method: 'GET',
     headers: {
         accept: 'application/json',
+        'ngrok-skip-browser-warning': 'true',
         Authorization: 'Bearer ' + import.meta.env.VITE_TMDB_API_KEY
     }
 };
@@ -50,7 +51,11 @@ export async function searchMovies(query: string): Promise<GetMovieDetail[]> {
 
 // get movies
 export async function getMovies(): Promise<GetMovieDetail[]> {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/movie`);
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/movie`, {
+        headers: {
+            'ngrok-skip-browser-warning': 'true'
+        }
+    });
     if (!response.ok) {
         throw new Error('Failed to fetch movies');
     }
@@ -74,7 +79,11 @@ export async function getMovies(): Promise<GetMovieDetail[]> {
 
 // get movie by id
 export async function getMovieById(id: number): Promise<GetMovieDetail> {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/movie/${id}`);
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/movie/${id}`, {
+        headers: {
+            'ngrok-skip-browser-warning': 'true'
+        }
+    });
     if (!response.ok) {
         throw new Error('Failed to fetch movie');
     }
@@ -91,7 +100,11 @@ export async function getMovieById(id: number): Promise<GetMovieDetail> {
 
 // get video stream path
 export async function getMovieStreamUrl(id: number): Promise<string> {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/stream/${id}`);
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/stream/${id}`, {
+        headers: {
+            'ngrok-skip-browser-warning': 'true'
+        }
+    });
     if (!response.ok) {
         throw new Error('Failed to fetch movie');
     }

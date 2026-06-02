@@ -8,6 +8,7 @@ export async function addMovie(data: AddMovieData) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true'
         },
         body: JSON.stringify(data),
     });

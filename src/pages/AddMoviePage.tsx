@@ -44,7 +44,11 @@ export default function AddMoviePage() {
       const response = await fetch(
         `${TMDB_BASE}/search/movie?query=${encodeURIComponent(query)}&language=id-ID&page=1`,
         {
-          headers: { accept: "application/json", Authorization: TMDB_API_KEY },
+          headers: {
+            accept: "application/json",
+            Authorization: TMDB_API_KEY,
+            "ngrok-skip-browser-warning": "true",
+          },
         },
       );
       if (!response.ok) throw new Error("TMDB Error");

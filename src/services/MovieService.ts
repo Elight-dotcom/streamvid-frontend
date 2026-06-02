@@ -15,19 +15,18 @@ export interface GetMovieDetail {
     isFiled : boolean;
 }
 
-const url = import.meta.env.VITE_TMDB_URL;
-const options = {
-    method: 'GET',
-    headers: {
-        accept: 'application/json',
-        'ngrok-skip-browser-warning': 'true',
-        Authorization: 'Bearer ' + import.meta.env.VITE_TMDB_API_KEY
-    }
+const apiUrl = import.meta.env.VITE_API_URL;
+const tmdbProxyUrl = `${apiUrl}/tmdb`;
+const ngrokHeaders = {
+    'ngrok-skip-browser-warning': 'true'
 };
 
 // search movies
 export async function searchMovies(query: string): Promise<GetMovieDetail[]> {
-    const response = await fetch(`${url}/search/movie?query=${encodeURIComponent(query)}&language=id-ID`, options);
+    const response = await fetch(
+        `${tmdbProxyUrl}/search/movie?query=${encodeURIComponent(query)}&language=id-ID&page=1`,
+        { headers: ngrokHeaders }
+    );
     if (!response.ok) {
         throw new Error('Failed to fetch movies');
     }
@@ -51,7 +50,7 @@ export async function searchMovies(query: string): Promise<GetMovieDetail[]> {
 
 // get movies
 export async function getMovies(): Promise<GetMovieDetail[]> {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/movie`, {
+    const response = await fetch(`${apiUrl}/movie`, {
         headers: {
             'ngrok-skip-browser-warning': 'true'
         }
@@ -79,7 +78,7 @@ export async function getMovies(): Promise<GetMovieDetail[]> {
 
 // get movie by id
 export async function getMovieById(id: number): Promise<GetMovieDetail> {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/movie/${id}`, {
+    const response = await fetch(`${apiUrl}/movie/${id}`, {
         headers: {
             'ngrok-skip-browser-warning': 'true'
         }
@@ -100,7 +99,7 @@ export async function getMovieById(id: number): Promise<GetMovieDetail> {
 
 // get video stream path
 export async function getMovieStreamUrl(id: number): Promise<string> {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/stream/${id}`, {
+    const response = await fetch(`${apiUrl}/stream/${id}`, {
         headers: {
             'ngrok-skip-browser-warning': 'true'
         }
@@ -116,7 +115,9 @@ export async function getMovieStreamUrl(id: number): Promise<string> {
 
 // get movie from Tmdb
 export async function getMovieDetail(tmdbId: number) {
-    const response = await fetch(`${url}/movie/${tmdbId}?language=id-ID`, options);
+    const response = await fetch(`${tmdbProxyUrl}/movie/${tmdbId}?language=id-ID`, {
+        headers: ngrokHeaders
+    });
 
     if (!response.ok) {
         throw new Error('Failed to fetch movie detail from TMDB');

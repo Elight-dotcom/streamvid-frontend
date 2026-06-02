@@ -2,8 +2,8 @@ import React, { useCallback, useRef, useState } from "react";
 import useSpatialNav from "../hooks/Usespatialnav";
 import { addMovie, type AddMovieData } from "../services/addMovieService";
 
-const TMDB_API_KEY = `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`;
-const TMDB_BASE = "https://api.themoviedb.org/3";
+const API_BASE = import.meta.env.VITE_API_URL;
+const TMDB_PROXY_BASE = `${API_BASE}/tmdb`;
 const TMDB_IMG = "https://image.tmdb.org/t/p/w185"; // Ukuran sedikit lebih besar agar tajam
 
 interface TmdbMovie {
@@ -42,11 +42,9 @@ export default function AddMoviePage() {
 
     try {
       const response = await fetch(
-        `${TMDB_BASE}/search/movie?query=${encodeURIComponent(query)}&language=id-ID&page=1`,
+        `${TMDB_PROXY_BASE}/search/movie?query=${encodeURIComponent(query)}&language=id-ID&page=1`,
         {
           headers: {
-            accept: "application/json",
-            Authorization: TMDB_API_KEY,
             "ngrok-skip-browser-warning": "true",
           },
         },
